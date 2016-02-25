@@ -1,0 +1,2 @@
+# product-grid
+app which can display a grid of products(with attributes like name, image, price). It should have an imageslider on top, to display featured product images. Add a toolbar/actionbar searchview that can help with a client-side search for the offline catalogue you build. Provide a menu item for language change, and implement the entire thing for any 2 languages of your choice. Preferably ENG+ any local language.
