@@ -1,15 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/light_grey">
 
-    <ImageView
-        android:id="@+id/iv_splash"
+    <RelativeLayout
+        android:id="@+id/featured_products_layout"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_centerInParent="true"
-        android:contentDescription="@string/splashScreen"
+        android:layout_height="@dimen/product_view_pager_height">
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewPagerImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+        <LinearLayout
+            android:id="@+id/circular_indicator_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal"
+            android:layout_alignParentBottom="true"/>
+    </RelativeLayout>
+
+    <GridView
+        android:id="@+id/products_grid"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/featured_products_layout"
+        android:gravity="center"
+        android:horizontalSpacing="10dp"
+        android:numColumns="2"
         android:padding="10dp"
-        android:src="@drawable/splash_logo" />
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="10dp" />
 
 </RelativeLayout>
