@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import in.agrostar.products.R;
-import in.agrostar.products.util.ProductsUtility;
+import in.agrostar.products.util.ProductUtil;
 
 /**
  * Created by shahid on 9/1/16.
@@ -30,9 +30,9 @@ public class CircularPageIndicator implements ViewPager.OnPageChangeListener {
         if (pageIndicatorLinearLayout != null) {
             for (int i = 0; i < numberOfPages; i++) {
                 View view = new View(context);
-                float width = ProductsUtility.convertDpToPixel(10, context);
+                float width = ProductUtil.convertDpToPixel(10, context);
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams((int) width, (int) width);
-                float margin = ProductsUtility.convertDpToPixel(5, context);
+                float margin = ProductUtil.convertDpToPixel(5, context);
                 layoutParams.setMargins((int) margin, (int) margin, (int) margin, (int) margin);
                 view.setLayoutParams(layoutParams);
 

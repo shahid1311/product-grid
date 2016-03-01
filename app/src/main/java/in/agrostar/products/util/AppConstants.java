@@ -21,6 +21,8 @@ import in.agrostar.products.models.ProductModel;
 public class AppConstants {
     private static Logger logger = new Logger(AppConstants.class.getName());
 
+    //TODO - These are hardcoded values and will require to be changed later
+    public static final int[] featuredProductsArray = {R.drawable.featured_1, R.drawable.featured_2, R.drawable.featured_3};
 
     public static ArrayList<ProductModel> getProductList(Context context){
         int[] productImage = {R.drawable.product_1, R.drawable.product_2, R.drawable.product_3,
@@ -28,17 +30,15 @@ public class AppConstants {
                 R.drawable.product_8, R.drawable.product_9, R.drawable.product_10};
         float[] productValue = {120, 150, 90, 225, 180, 200, 115, 170, 135, 190};
 
+        /**
+         * Check if the user's preference and current preference match else set locale
+         */
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-
         Configuration config = context.getResources().getConfiguration();
-
         String lang = settings.getString(context.getString(R.string.pref_locale), "");
         if (! "".equals(lang) && ! config.locale.getLanguage().equals(lang))
         {
-            Locale locale = new Locale(lang);
-            Locale.setDefault(locale);
-            config.locale = locale;
-            context.getResources().updateConfiguration(config, context.getResources().getDisplayMetrics());
+            ProductUtil.setLocale(lang, context);
         }
 
         Resources res = context.getResources();

@@ -53,6 +53,7 @@ public class ProductsGridAdapter extends BaseAdapter implements Filterable {
 		holder.productImage.setImageResource(productModel.productImage);
 		holder.productNameTv.setText(productModel.productName);
         holder.productPriceTv.setText(productModel.productPrice + "");
+        holder.productImage.setTag(productModel);
 
 		return convertView;
 

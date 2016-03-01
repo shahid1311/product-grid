@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -31,14 +32,16 @@ import in.agrostar.products.ui.adapter.ProductsGridAdapter;
 import in.agrostar.products.ui.adapter.ProductsPageAdapter;
 import in.agrostar.products.ui.custom_view.CircularPageIndicator;
 import in.agrostar.products.util.AppConstants;
+import in.agrostar.products.util.ProductUtil;
 
 /**
  * Created by Shahid on 2/26/2016.
  */
 public class ProductListActivity extends AppCompatActivity implements SearchView.OnQueryTextListener,
-        GridView.OnItemClickListener{
+        GridView.OnItemClickListener {
 
     private Logger logger;
+    private ProductsGridAdapter gridAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,32 +53,34 @@ public class ProductListActivity extends AppCompatActivity implements SearchView
         initProductList();
     }
 
-
-    private ProductsGridAdapter gridAdapter;
-    private void initProductList(){
+    /**
+     * Initialize the harcoded product list and set in Grid View
+     */
+    private void initProductList() {
         ArrayList<ProductModel> productModelList = AppConstants.getProductList(this);
 
-        GridView productsGrid = (GridView) findViewById(R.id.products_grid);
-        productsGrid.setOnItemClickListener(this);
+        if(productModelList!=null && productModelList.size()>0){
+            GridView productsGrid = (GridView) findViewById(R.id.products_grid);
+            productsGrid.setOnItemClickListener(this);
 
-        gridAdapter = new ProductsGridAdapter(this, productModelList);
-        productsGrid.setAdapter(gridAdapter);
+            gridAdapter = new ProductsGridAdapter(this, productModelList);
+            productsGrid.setAdapter(gridAdapter);
+        }
+
     }
+
 
     /**
      * Setup the swipe views using view pager
      */
     private void setUpImageSlider() {
-        //TODO - These are hardcoded values and will require to be changed later
-        int[] featuredProductsArray = {R.drawable.featured_1, R.drawable.featured_2, R.drawable.featured_3};
-
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewPagerImage);
-        ProductsPageAdapter adapter = new ProductsPageAdapter(this, featuredProductsArray);
+        ProductsPageAdapter adapter = new ProductsPageAdapter(this, AppConstants.featuredProductsArray);
         viewPager.setAdapter(adapter);
 
         //Set the Circular Page Indicator for ViewPager
         int pageCount = adapter.getCount();
-        if(pageCount>0){
+        if (pageCount > 0) {
             LinearLayout indicatorLayout = (LinearLayout) findViewById(R.id.circular_indicator_layout);
             CircularPageIndicator circularPageIndicator = new CircularPageIndicator(
                     this, indicatorLayout);
@@ -84,24 +89,20 @@ public class ProductListActivity extends AppCompatActivity implements SearchView
         }
     }
 
-    private Locale myLocale;
-    public void setLocale(String lang) {
-        //Commit the languag pref in shared preference
+    /**
+     * This method saves the users language preference in shared preference, sets the locale and refreshes the current activity
+     * @param lang - Locale code (eg - English -> en)
+     */
+    private void setLocale(String lang) {
+        //Commit the language pref in shared preference
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(getString(R.string.pref_locale), lang);
         editor.apply();
 
-        Toast.makeText(ProductListActivity.this, lang,
-                Toast.LENGTH_SHORT).show();
-        myLocale = new Locale(lang);
-        Resources res = getResources();
-        DisplayMetrics dm = res.getDisplayMetrics();
-        Configuration conf = res.getConfiguration();
-        conf.locale = myLocale;
-        res.updateConfiguration(conf, dm);
+        ProductUtil.setLocale(lang, ProductListActivity.this);
 
-        logger.debug(conf.locale.getLanguage());
+        //Restart the activity for displaying the changes
         Intent refresh = getIntent();
         finish();
         startActivity(refresh);
@@ -134,18 +135,53 @@ public class ProductListActivity extends AppCompatActivity implements SearchView
             }
         });
 
-
         // Associate searchable configuration with the SearchView
         SearchManager searchManager =
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView =
+        final SearchView searchView =
                 (SearchView) menu.findItem(R.id.menu_search).getActionView();
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getComponentName()));
-        searchView.setSubmitButtonEnabled(true);
         searchView.setOnQueryTextListener(this);
 
+        final MenuItem searchMenuItem = menu.findItem(R.id.menu_search);
+
+        searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean queryTextFocused) {
+                if (!queryTextFocused) {
+                    if (!(searchView.getQuery().toString().trim().length() > 0)) {
+                        showImageSlider();
+                    }
+                } else {
+                    hideImageSlider();
+                }
+            }
+        });
+
         return true;
+    }
+
+    /**
+     * Set the visibility of the IMAGE slider to VISIBLE
+     */
+    private void showImageSlider() {
+        RelativeLayout imageSliderLayout = (RelativeLayout) findViewById(R.id.featured_products_layout);
+        if (imageSliderLayout != null) {
+            logger.debug("Show Image SLider");
+            imageSliderLayout.setVisibility(View.VISIBLE);
+        }
+    }
+
+    /**
+     * Set the visibility of the IMAGE slider to GONE
+     */
+    private void hideImageSlider() {
+        RelativeLayout imageSliderLayout = (RelativeLayout) findViewById(R.id.featured_products_layout);
+        if (imageSliderLayout != null) {
+            logger.debug("Hide Image SLider");
+            imageSliderLayout.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -161,8 +197,9 @@ public class ProductListActivity extends AppCompatActivity implements SearchView
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        ProductModel productModel = (ProductModel) view.getTag();
-        Toast.makeText(ProductListActivity.this, productModel.productName+" " +productModel.productPrice,
+        ProductModel productModel = (ProductModel) view.findViewById(R.id.product_image).getTag();
+        Toast.makeText(ProductListActivity.this, productModel.productName + " " + productModel.productPrice,
                 Toast.LENGTH_SHORT).show();
     }
+
 }

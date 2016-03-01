@@ -40,10 +40,7 @@ public class MyApplication extends Application
         String lang = settings.getString(getString(R.string.pref_locale), "");
         if (! "".equals(lang) && ! config.locale.getLanguage().equals(lang))
         {
-            locale = new Locale(lang);
-            Locale.setDefault(locale);
-            config.locale = locale;
-            getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
+            ProductUtil.setLocale(lang, getBaseContext());
         }
     }
 }

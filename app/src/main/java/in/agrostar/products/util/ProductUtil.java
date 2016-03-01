@@ -1,41 +1,31 @@
 package in.agrostar.products.util;
 
-import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.util.DisplayMetrics;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Locale;
 
 /**
- * Created by shahid on 9/9/15.
+ * Created by Shahid on 3/2/2016.
  */
-public class ProductsUtility {
-
+public class ProductUtil {
 
     /**
-     * Convert the Country code json to String
-     * @param mActivity
-     * @return
+     * This method is called to set the locale as per user's selection
+     * @param lang
+     * @param context
      */
-    public static String loadCountryJSONFromAsset(Context mActivity) {
-        String json = null;
-        try {
-            InputStream is = mActivity.getAssets().open("country_code.json");
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-            json = new String(buffer, "UTF-8");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            return null;
-        }
-        return json;
+    public static void setLocale(String lang, Context context){
+        Locale myLocale = new Locale(lang);
+        Resources res = context.getResources();
+        DisplayMetrics dm = res.getDisplayMetrics();
+        Configuration conf = res.getConfiguration();
+        conf.locale = myLocale;
+        res.updateConfiguration(conf, dm);
     }
+
 
     /**
      * This method converts device specific pixels to density independent pixels.
@@ -50,6 +40,7 @@ public class ProductsUtility {
         float dp = px / (metrics.densityDpi / 160f);
         return dp;
     }
+
 
     /**
      * This method converts dp unit to equivalent pixels, depending on device density.

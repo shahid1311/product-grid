@@ -20,12 +20,6 @@
         </activity>
 
         <activity
-            android:name=".ui.activities.SearchResultActivity"
-            android:label="@string/products_title">
-
-        </activity>
-
-        <activity
             android:name=".ui.activities.ProductListActivity"
             android:screenOrientation="portrait"
             android:configChanges="locale|orientation">
