@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/light_grey">
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:id="@+id/featured_products_layout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/product_view_pager_height">
+        android:layout_height="@dimen/product_view_pager_height"
+        android:background="@color/light_grey">
         <android.support.v4.view.ViewPager
             android:id="@+id/viewPagerImage"
             android:layout_width="match_parent"

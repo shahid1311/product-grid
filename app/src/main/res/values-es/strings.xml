@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Productos</string>
+    <string name="splashScreen">Pantalla de Bienvenida</string>
+    <string name="action_settings">Ajustes</string>
+    <string name="menu_search">Buscar</string>
+    <string name="search_hint">Buscar</string>
+    <string name="search_result">Resultado de búsqueda</string>
+    <string name="product_image">Imagen del producto</string>
+    <string name="products_title">Productos</string>
+
+    <array name="product_name">
+        <item>Producto 1</item>
+        <item>Producto 2</item>
+        <item>Producto 3</item>
+        <item>Producto 4</item>
+        <item>Producto 5</item>
+        <item>Producto 6</item>
+        <item>Producto 7</item>
+        <item>Producto 8</item>
+        <item>Producto 9</item>
+        <item>Producto 10</item>
+    </array>
+</resources>
