@@ -7,6 +7,9 @@
     <string name="search_result">Search Result</string>
     <string name="product_image">Product Image</string>
     <string name="products_title">Products</string>
+    <string name="english">English</string>
+    <string name="spanish">Spanish</string>
+    <string name="pref_locale">locale</string>
 
     <array name="product_name">
         <item>Product 1</item>

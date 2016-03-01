@@ -2,12 +2,19 @@ package in.agrostar.products.ui.activities;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -15,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import in.agrostar.products.R;
 import in.agrostar.products.logger.Logger;
@@ -30,7 +38,7 @@ import in.agrostar.products.util.AppConstants;
 public class ProductListActivity extends AppCompatActivity implements SearchView.OnQueryTextListener,
         GridView.OnItemClickListener{
 
-    protected Logger logger;
+    private Logger logger;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,13 +50,15 @@ public class ProductListActivity extends AppCompatActivity implements SearchView
         initProductList();
     }
 
+
+    private ProductsGridAdapter gridAdapter;
     private void initProductList(){
         ArrayList<ProductModel> productModelList = AppConstants.getProductList(this);
 
         GridView productsGrid = (GridView) findViewById(R.id.products_grid);
         productsGrid.setOnItemClickListener(this);
 
-        ProductsGridAdapter gridAdapter = new ProductsGridAdapter(this, productModelList);
+        gridAdapter = new ProductsGridAdapter(this, productModelList);
         productsGrid.setAdapter(gridAdapter);
     }
 
@@ -74,12 +84,57 @@ public class ProductListActivity extends AppCompatActivity implements SearchView
         }
     }
 
+    private Locale myLocale;
+    public void setLocale(String lang) {
+        //Commit the languag pref in shared preference
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(getString(R.string.pref_locale), lang);
+        editor.apply();
+
+        Toast.makeText(ProductListActivity.this, lang,
+                Toast.LENGTH_SHORT).show();
+        myLocale = new Locale(lang);
+        Resources res = getResources();
+        DisplayMetrics dm = res.getDisplayMetrics();
+        Configuration conf = res.getConfiguration();
+        conf.locale = myLocale;
+        res.updateConfiguration(conf, dm);
+
+        logger.debug(conf.locale.getLanguage());
+        Intent refresh = getIntent();
+        finish();
+        startActivity(refresh);
+
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         // Inflate menu to add items to action bar if it is present.
         inflater.inflate(R.menu.produclt_list_menu, menu);
+
+        MenuItem englishItem = (MenuItem) menu.findItem(R.id.english_lang);
+        englishItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                setLocale("en");
+                return false;
+            }
+        });
+
+
+        MenuItem spanishItem = (MenuItem) menu.findItem(R.id.spanish_lang);
+        spanishItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                setLocale("es");
+                return false;
+            }
+        });
+
+
         // Associate searchable configuration with the SearchView
         SearchManager searchManager =
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -100,6 +155,7 @@ public class ProductListActivity extends AppCompatActivity implements SearchView
 
     @Override
     public boolean onQueryTextChange(String newText) {
+        gridAdapter.getFilter().filter(newText);
         return false;
     }
 

@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 
 import in.agrostar.products.R;
 import in.agrostar.products.logger.Logger;
-import in.agrostar.products.preferences.ProductPreference;
 import in.agrostar.products.util.AppConstants;
 
 /**
@@ -43,7 +42,5 @@ public class SplashActivity extends AppCompatActivity {
             }
         }, SPLASH_TIME_OUT);
 
-        ProductPreference productPref = new ProductPreference(SplashActivity.this, AppConstants.PREF_FILE_NAME);
-        //TODO - Insert hardcoded data in DB
     }
 }
